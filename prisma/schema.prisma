@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  username String    @unique
+  password String
+  email    String    @unique
+  fullName String
+  role     String    @default("user") // user, admin, asesor
+  projects Project[]
+
+  // Relación con AsignacionAsesor (asesor y usuario)
+  asesorAsig  AsignacionAsesor[] @relation("Asesor")
+  usuarioAsig AsignacionAsesor[] @relation("Usuario")
+
+  // Relación con Evaluacion (asesor)
+  evaluacionesEvaluadas Evaluacion[]
+
+  // Relación con Reportes
+  reportesGenerados Report[]
+}
+
+model Project {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  status      String   @default("pending")
+  pdfUrl      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      String   @db.ObjectId
+  user        User     @relation(fields: [userId], references: [id])
+
+  // Relación con AsignacionAsesor
+  asignaciones AsignacionAsesor[]
+
+  // Relación con Evaluaciones
+  evaluaciones Evaluacion[]
+}
+
+model Report {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String // Título del reporte
+  description String // Descripción del reporte
+  type        String // Tipo de reporte (ejemplo: "usuarios", "proyectos")
+  createdAt   DateTime @default(now()) // Fecha de creación del reporte
+  generatedBy String   @db.ObjectId // ID del usuario que generó el reporte
+  user        User     @relation(fields: [generatedBy], references: [id]) // Relación con la tabla User
+}
+
+model AsignacionAsesor {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  asesorId   String @db.ObjectId // ID del asesor
+  usuarioId  String @db.ObjectId // ID del usuario
+  proyectoId String @db.ObjectId // ID del proyecto
+
+  // Relación con la tabla "User" (asesor)
+  asesor User @relation("Asesor", fields: [asesorId], references: [id])
+
+  // Relación con la tabla "User" (usuario)
+  usuario User @relation("Usuario", fields: [usuarioId], references: [id])
+
+  // Relación con la tabla "Project"
+  proyecto Project @relation(fields: [proyectoId], references: [id])
+}
+
+model Evaluacion {
+  id           String  @id @default(auto()) @map("_id") @db.ObjectId
+  proyectoId   String  @db.ObjectId // ID del proyecto evaluado
+  proyecto     Project @relation(fields: [proyectoId], references: [id])
+  asesorId     String  @db.ObjectId // ID del asesor que realizó la evaluación
+  asesor       User    @relation(fields: [asesorId], references: [id])
+  calificacion Int // Calificación otorgada al proyecto
+  comentarios  String? // Comentarios del asesor
+}
