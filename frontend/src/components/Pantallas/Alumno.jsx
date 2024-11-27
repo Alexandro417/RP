@@ -1,7 +1,7 @@
 import React from 'react';
 import { User, FolderKanban, Upload, Download, ChevronDown } from 'lucide-react';
-import { Button } from "../components/ui/button";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "../components/ui/dropdown-menu";
+import { Button } from "../ui/button";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "../ui/dropdown-menu";
 
 const Dashboard = () => {
   return (

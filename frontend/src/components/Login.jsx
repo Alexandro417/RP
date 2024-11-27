@@ -78,7 +78,7 @@ export default function Login() {
         <input
           type="email"
           placeholder="Correo electrónico"
-          className="w-full py-2 pl-10 pr-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+          className="w-full py-2 pl-10 pr-4 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-600"  // Cambié a `rounded-full`
           required
         />
       </div>
@@ -87,17 +87,27 @@ export default function Login() {
         <input
           type="password"
           placeholder="Contraseña"
-          className="w-full py-2 pl-10 pr-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+          className="w-full py-2 pl-10 pr-4 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-600"  // Cambié a `rounded-full`
           required
         />
       </div>
       <Button
         type="submit"
-        className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+        className="w-full py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700" // Cambié a `rounded-full`
       >
         Iniciar sesión
       </Button>
     </form>
+    
+    {/* Botón Crear cuenta con separación */}
+    <div className="mt-4">
+      <Link to="/registro" className="text-blue-600 hover:underline">
+      <Button
+        className="w-full py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 mb-4" // Cambié a `rounded-full`
+      >
+        Crear cuenta
+      </Button></Link>
+    </div>
     <p className="text-sm text-center text-gray-600 mt-4">
       <Link to="#" className="text-blue-600 hover:underline">
         ¿Olvidaste tu contraseña?
