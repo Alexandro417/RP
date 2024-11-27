@@ -59,13 +59,18 @@ export default function Welcome() {
       </nav>
 
       {/* Welcome Section */}
-      <div className="flex items-center justify-center min-h-[80vh] flex-col text-center text-white">
-        <h2 className="text-4xl font-bold mb-6">Bienvenido al Sistema de Residencias</h2>
-        <p className="text-lg mb-6">
-          Nos complace darte la bienvenida a nuestro sistema integral diseñado para gestionar
-          y mejorar tu experiencia residencial.
-        </p>
-      </div>
+<div className="flex items-center justify-center min-h-[80vh] flex-col text-center text-white">
+  <img
+    src="/image/img.jpg" // Ruta de la imagen
+    alt="Logo IT Matehuala"
+    className="w-48 h-48 mb-6 rounded-full" // Redondea la imagen como un círculo
+  />
+  <h2 className="text-4xl font-bold mb-6">Bienvenido al Sistema de Residencias</h2>
+  <p className="text-lg mb-6">
+    Nos complace darte la bienvenida a nuestro sistema integral diseñado para gestionar
+    y mejorar tu experiencia residencial.
+  </p>
+</div>
     </div>
   );
 }
