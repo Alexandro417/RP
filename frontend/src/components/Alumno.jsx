@@ -1,68 +1,66 @@
 import React from 'react';
-import { User, Folder, PlusCircle } from 'lucide-react';
+import { User, FolderKanban, Upload, Download, ChevronDown } from 'lucide-react';
+import { Button } from "../components/ui/button";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "../components/ui/dropdown-menu";
 
-const App = () => {
+const Dashboard = () => {
   return (
-    <div className="min-h-screen bg-[#E6E6FA]">
+    <div className="min-h-screen flex flex-col bg-[rgb(31,65,155)]">
       {/* Header */}
-      <header className="border-b bg-[rgb(205,211,251)] backdrop-blur-sm">
-        <div className="container mx-auto flex h-16 items-center px-4">
-          <div className="flex items-center gap-2">
-            <img
-              src="/images/logo.png"
-              alt="Instituto Tecnologico de Matehuala logo"
-              className="h-10 w-10"
-            />
-            <span className="text-lg font-semibold">
-              INSTITUTO TECNOLOGICO DE MATEHUALA
-            </span>
-          </div>
+      <header className="bg-[rgb(31,65,155)] text-white p-4 shadow-md border-b border-white/20 flex items-center">
+        <div className="w-12 h-12 bg-white rounded-full mr-4 overflow-hidden">
+          <img src="/image/img.jpg" alt="Logo IT Matehuala" className="w-full h-full object-cover" />
         </div>
+        <h1 className="text-xl font-bold">INSTITUTO TECNOLÓGICO DE MATEHUALA</h1>
       </header>
 
-      <div className="flex min-h-[calc(100vh-4rem)]">
+      <div className="flex flex-1">
         {/* Sidebar */}
-        <aside className="w-64 border-r bg-white p-4">
+        <div className="w-64 text-white p-5 border-r border-white/20">
           <nav className="space-y-4">
-            <a
-              href="#"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100"
-            >
-              <User className="h-5 w-5" />
-              <span className="text-sm font-medium">Perfil</span>
+            <a href="#" className="flex items-center space-x-3 px-2 py-2 rounded hover:bg-white/10">
+              <User className="w-5 h-5" />
+              <span>Perfil</span>
             </a>
-            <a
-              href="#"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100"
-            >
-              <Folder className="h-5 w-5" />
-              <span className="text-sm font-medium">Proyectos</span>
+            <a href="#" className="flex items-center space-x-3 px-2 py-2 rounded hover:bg-white/10">
+              <FolderKanban className="w-5 h-5" />
+              <span>Proyectos alumno</span>
             </a>
-            <a
-              href="#"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100"
-            >
-              <PlusCircle className="h-5 w-5" />
-              <span className="text-sm font-medium">Subir archivos</span>
+            <a href="#" className="flex items-center space-x-3 px-2 py-2 rounded hover:bg-white/10">
+              <Upload className="w-5 h-5" />
+              <span>Subir archivos</span>
             </a>
           </nav>
-        </aside>
+        </div>
 
         {/* Main Content */}
-        <main className="flex-1 p-6">
-          <div className="rounded-lg bg-white/80 p-6 shadow-lg backdrop-blur-sm">
-            <h2 className="mb-6 text-2xl font-bold">Proyectos</h2>
-            <div className="grid gap-4">
-              {/* Aquí irá el contenido de los proyectos */}
-              <div className="rounded-lg border p-4">
-                <p className="text-gray-600">No hay proyectos disponibles.</p>
+        <div className="flex-1 p-8">
+          <div className="bg-white rounded-3xl shadow-sm p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-semibold text-[rgb(31,65,155)]">Proyectos alumno</h2>
+              <div className="flex space-x-4">
+                <Button variant="outline">
+                  <Download className="mr-2 h-4 w-4" /> Descargar formatos
+                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline">
+                      Ir a <ChevronDown className="ml-2 h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem>Mi proyecto</DropdownMenuItem>
+                    <DropdownMenuItem>Banco de proyectos</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
+            <p className="text-gray-600">No hay proyectos disponibles.</p>
           </div>
-        </main>
+        </div>
       </div>
     </div>
   );
 };
 
-export default App;
+export default Dashboard;
