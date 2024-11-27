@@ -1,17 +1,9 @@
 "use client";
 import { Link } from "react-router-dom";
-import {
-  Mail,
-  Key,
-  Globe,
-  Home,
-  HelpCircle,
-  Fingerprint,
-} from "lucide-react";
+import { Globe, Home, HelpCircle, Fingerprint } from "lucide-react";
 import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
 
-export default function Login() {
+export default function Welcome() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-900 to-blue-600">
       {/* Navigation */}
@@ -66,46 +58,14 @@ export default function Login() {
         </div>
       </nav>
 
-{/* Login Section */}
-<div className="flex items-center justify-center min-h-[80vh]">
-  <div className="bg-white rounded-xl shadow-lg p-8 max-w-sm w-full">
-    <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
-      Iniciar sesión
-    </h2>
-    <form className="space-y-4">
-      <div className="relative w-full">
-        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-        <input
-          type="email"
-          placeholder="Correo electrónico"
-          className="w-full py-2 pl-10 pr-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-          required
-        />
+      {/* Welcome Section */}
+      <div className="flex items-center justify-center min-h-[80vh] flex-col text-center text-white">
+        <h2 className="text-4xl font-bold mb-6">Bienvenido al Sistema de Residencias</h2>
+        <p className="text-lg mb-6">
+          Nos complace darte la bienvenida a nuestro sistema integral diseñado para gestionar
+          y mejorar tu experiencia residencial.
+        </p>
       </div>
-      <div className="relative w-full">
-        <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          className="w-full py-2 pl-10 pr-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-          required
-        />
-      </div>
-      <Button
-        type="submit"
-        className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-      >
-        Iniciar sesión
-      </Button>
-    </form>
-    <p className="text-sm text-center text-gray-600 mt-4">
-      <Link to="#" className="text-blue-600 hover:underline">
-        ¿Olvidaste tu contraseña?
-      </Link>
-    </p>
-  </div>
-</div>
-
     </div>
   );
 }
