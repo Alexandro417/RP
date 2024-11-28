@@ -1,4 +1,10 @@
 "use strict";
+import { AlumnosModule } from './alumnos/alumnos.module';
+import { DivisionEstudiosModule } from './division-estudios/division-estudios.module';
+import { GtuvModule } from './gtuv/gtuv.module';
+import { JefeCarreraModule } from './jefe-carrera/jefe-carrera.module';
+import { DocenteModule } from './docente/docente.module';
+import { SuperadminModule } from './superadmin/superadmin.module';
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
