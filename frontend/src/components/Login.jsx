@@ -8,7 +8,7 @@ import {
   HelpCircle,
   Fingerprint,
 } from "lucide-react";
-import { Button } from "../components/ui/button";
+import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/input";
 
 export default function Login() {

@@ -1,7 +1,7 @@
 "use client";
 import { Link } from "react-router-dom";
 import { Mail, Key, User, Globe, Home, HelpCircle, Fingerprint } from "lucide-react";
-import { Button } from "../components/ui/button";
+import { Button } from "../components/ui/Button";
 
 export default function Register() {
   return (

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "../components/ui/button";
+import { Button } from "../components/ui/Button";
 import { ChevronDown, Home, HelpCircle, Fingerprint, Globe } from "lucide-react";
 
 export default function Ayuda() {
