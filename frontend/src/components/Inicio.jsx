@@ -1,7 +1,7 @@
 "use client";
 import { Link } from "react-router-dom";
 import { Globe, Home, HelpCircle, Fingerprint } from "lucide-react";
-import { Button } from "../components/ui/button";
+import { Button } from "../components/ui/Button";
 
 export default function Welcome() {
   return (

@@ -1,9 +1,7 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -12,23 +10,30 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
-
+// Define the roles as an enum
+enum Role {
+  ALUMNO
+  COORDINADOR
+  GTIV
+  JEFE_CARRERA
+  DOCENTE
+  ADMIN
+  SUPERADMIN
+}
 model User {
   id       String    @id @default(auto()) @map("_id") @db.ObjectId
   username String    @unique
   password String
   email    String    @unique
   fullName String
-  role     String    @default("user") // user, admin, asesor
+  role     String    @default("ALUMNO") // user, admin, asesor
   projects Project[]
 
   // Relación con AsignacionAsesor (asesor y usuario)
   asesorAsig  AsignacionAsesor[] @relation("Asesor")
   usuarioAsig AsignacionAsesor[] @relation("Usuario")
-
   // Relación con Evaluacion (asesor)
   evaluacionesEvaluadas Evaluacion[]
-
   // Relación con Reportes
   reportesGenerados Report[]
 }
@@ -85,4 +90,237 @@ model Evaluacion {
   asesor       User    @relation(fields: [asesorId], references: [id])
   calificacion Int // Calificación otorgada al proyecto
   comentarios  String? // Comentarios del asesor
+}
+
+///schema nuevos de acuerdo a el script de sql server 
+// Schema for [Person].[Career]
+model Career {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  idDepartment String @db.ObjectId
+  careerId     String
+  name         String
+  startDate    DateTime?
+  officialKey  String?
+  active       Boolean
+  timeCreated  DateTime
+  timeUpdated  DateTime?
+  department   Department @relation(fields: [idDepartment], references: [id])
+
+  @@map("Career")
+}
+
+// Schema for [Person].[Department]
+model Department {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  active      Boolean
+  timeCreated DateTime
+  timeUpdated DateTime?
+
+  careers     Career[]
+
+  @@map("Department")
+}
+
+// Schema for [Person].[Permission]
+model Permission {
+  id          BigInt    @id @map("_id")
+  name        String
+  active      Boolean
+  timeCreated DateTime
+  timeUpdated DateTime?
+
+  personPermissions PersonPermission[]
+
+  @@map("Permission")
+}
+
+// Schema for [Person].[PersonPermission]
+model PersonPermission {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  personId     BigInt
+  permissionId BigInt
+  active       Boolean
+  timeCreated  DateTime
+  timeUpdated  DateTime?
+
+  permission   Permission @relation(fields: [permissionId], references: [id])
+
+  @@map("PersonPermission")
+}
+
+// Schema for [Residence].[Adviser]
+model Adviser {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  idProject     BigInt
+  idPerson      BigInt
+  idAdviserType String @db.ObjectId
+  active        Boolean
+  timeCreated   DateTime
+  timeUpdated   DateTime?
+
+  adviserType   AdviserType @relation(fields: [idAdviserType], references: [id])
+
+  @@map("Adviser")
+}
+
+// Schema for [Residence].[AdviserType]
+model AdviserType {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  nombre      String
+  active      Boolean
+  timeCreated DateTime
+  timeUpdated DateTime?
+
+  advisers    Adviser[]
+
+  @@map("AdviserType")
+}
+
+// Schema for [Residence].[Agreement]
+model Agreement {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  idCompany    BigInt
+  inicio       DateTime
+  fin          DateTime
+  active       Boolean
+  timeCreated  DateTime
+  timeUpdated  DateTime?
+
+  @@map("Agreement")
+}
+
+// Schema for [Residence].[Ambit]
+model Ambit {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  nombre      String
+  active      Boolean
+  timeCreated DateTime
+  timeUpdated DateTime?
+
+  @@map("Ambit")
+}
+
+// Schema for [Residence].[Comment]
+model Comment {
+  id           BigInt   @id @map("_id")
+  idProject    BigInt
+  idCommentType BigInt
+  idPerson     BigInt
+  mensaje      String
+  active       Boolean
+  timeCreated  DateTime
+  timeUpdated  DateTime?
+
+  commentType  CommentType @relation(fields: [idCommentType], references: [id])
+
+  @@map("Comment")
+}
+
+// Schema for [Residence].[CommentType]
+model CommentType {
+  id          BigInt    @id @map("_id")
+  nombre      String
+  active      Boolean
+  timeCreated DateTime
+  timeUpdated DateTime?
+
+  comments    Comment[]
+
+  @@map("CommentType")
+}
+
+// Schema for [Residence].[Company]
+model Company {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  idPerson   BigInt
+  idDictum   BigInt
+  idSector   BigInt
+  nombre     String
+  rfc        String
+  lema       String
+  mision     String
+  valores    String
+  calle      String
+  colonia    String
+  cp         String
+  ciudad     String
+  estado     String
+  telefono   String
+  active     Boolean
+  timeCreated DateTime
+  timeUpdated DateTime?
+
+  @@map("Company")
+  CompanyDictum CompanyDictum[]
+  dictum Dictum @relation(fields: [idDictum], references: [id])
+}
+
+model CompanyDictum {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  companyId String @db.ObjectId
+  dictumId  BigInt
+
+  company Company @relation(fields: [companyId], references: [id])
+  dictum  Dictum  @relation(fields: [dictumId], references: [id])
+
+  @@unique([companyId, dictumId])
+  @@map("CompanyDictum")
+}
+
+// Schema for [Residence].[Dictum]
+model Dictum {
+  id          BigInt    @id @map("_id")
+  nombre      String
+  active      Boolean
+  timeCreated DateTime
+  timeUpdated DateTime?
+
+  companies   Company[]
+
+  @@map("Dictum")
+  CompanyDictum CompanyDictum[]
+}
+
+// Schema for [Residence].[Doc]
+model Doc {
+  id          BigInt    @id @map("_id")
+  idPerson    BigInt
+  idTypeDoc   BigInt
+  count       BigInt
+  timeCreated DateTime
+
+  @@map("Doc")
+}
+
+// Schema for [Residence].[Documents]
+model Documents {
+  id          BigInt    @id @map("_id")
+  active      Boolean
+  name        String
+  timeCreated DateTime
+
+  @@map("Documents")
+}
+
+// Schema for [Residence].[FileDictum]
+model FileDictum {
+  id          BigInt    @id @map("_id")
+  nombre      String
+  active      Boolean
+  timeCreated DateTime
+  timeUpdated DateTime?
+
+  @@map("FileDictum")
+}
+
+// Schema for [Residence].[FileType]
+model FileType {
+  id          BigInt    @id @map("_id")
+  nombre      String
+  active      Boolean
+  timeCreated DateTime
+  timeUpdated DateTime?
+
+  @@map("FileType")
 }
