@@ -5,6 +5,7 @@ import Login from './components/Login.jsx';
 import Inicio from './components/Inicio.jsx';
 import Ayuda from './components/Ayuda';
 import Registro from './components/Registro.jsx';
+import DivisionEstudios from './components/Pantallas/Divicion.jsx';
 function App() {
   return (
     <div className="App">
@@ -19,6 +20,8 @@ function App() {
         <Route path="/ayuda" element={<Ayuda />} />
         {/* Ruta para Registro */}
         <Route path="/registro" element={<Registro />} />
+        {/* Ruta para Division */}
+        <Route path="/division" element={<DivisionEstudios />} />
       </Routes>
     </div>
   );
