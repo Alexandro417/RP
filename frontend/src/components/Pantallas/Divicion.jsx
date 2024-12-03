@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, FolderKanban, Upload, Camera, Menu, X } from 'lucide-react';
+import { User, FolderKanban, Upload, Camera, Menu, X, CheckCircle, Circle } from 'lucide-react';
 import { Button } from "../ui/Button";
 
 export default function Dashboard() {
@@ -8,22 +8,44 @@ export default function Dashboard() {
 
   // Lista de proyectos para "Proyectos alumnos"
   const projectsAlumnos = [
-    { name: 'Sistema de Gestión', company: 'TechSolutions', description: 'Optimiza el control de stock y mejora la eficiencia operativa.', image: '/placeholder.svg?height=200&width=300', student: 'Juan Pérez', career: 'Ingeniería en Sistemas' },
-    { name: 'Aplicación Móvil', company: 'AppDev', description: 'Desarrollo de una app para mejorar la productividad.', image: '/placeholder.svg?height=200&width=300', student: 'María González', career: 'Ingeniería en Sistemas' },
-    { name: 'E-commerce', company: 'ShopMasters', description: 'Plataforma de compras online para pequeñas empresas.', image: '/placeholder.svg?height=200&width=300', student: 'Carlos López', career: 'Ingeniería Industrial' },
-    { name: 'Sistema de Inventario', company: 'InvControl', description: 'Sistema para gestionar inventarios de productos en tiempo real.', image: '/placeholder.svg?height=200&width=300', student: 'Ana Hernández', career: 'Ingeniería en Sistemas' },
-    { name: 'Aplicación de Finanzas', company: 'FinApp', description: 'Aplicación para gestionar finanzas personales.', image: '/placeholder.svg?height=200&width=300', student: 'Luis Martínez', career: 'Ingeniería en Sistemas' },
-    { name: 'Aplicación de Salud', company: 'HealthTech', description: 'Aplicación para el seguimiento de la salud y bienestar.', image: '/placeholder.svg?height=200&width=300', student: 'Elena Rodríguez', career: 'Ingeniería Biomédica' },
-    { name: 'Plataforma de Educación', company: 'EduTech', description: 'Sistema para gestión de cursos en línea.', image: '/placeholder.svg?height=200&width=300', student: 'David Sánchez', career: 'Ingeniería en Sistemas' },
-    { name: 'Red Social', company: 'SocialConnect', description: 'Aplicación de red social para crear comunidades.', image: '/placeholder.svg?height=200&width=300', student: 'Sandra Pérez', career: 'Comunicación Digital' },
+    { 
+      name: 'Sistema de Gestión', 
+      company: 'TechSolutions', 
+      description: 'Optimiza el control de stock y mejora la eficiencia operativa.', 
+      image: '/placeholder.svg?height=200&width=300', 
+      student: 'Juan Pérez', 
+      career: 'Ingeniería en Sistemas',
+      stages: [
+        { name: 'Propuesta', completed: true },
+        { name: 'Revisión', completed: true },
+        { name: 'Desarrollo', completed: true },
+        { name: 'Pruebas', completed: true },
+        { name: 'Entrega', completed: false }
+      ]
+    },
+    { 
+      name: 'Aplicación Móvil', 
+      company: 'AppDev', 
+      description: 'Desarrollo de una app para mejorar la productividad.', 
+      image: '/placeholder.svg?height=200&width=300', 
+      student: 'María González', 
+      career: 'Ingeniería en Sistemas',
+      stages: [
+        { name: 'Propuesta', completed: true },
+        { name: 'Revisión', completed: false },
+        { name: 'Desarrollo', completed: false },
+        { name: 'Pruebas', completed: false },
+        { name: 'Entrega', completed: false }
+      ]
+    },
+    // Más proyectos aquí...
   ];
 
   // Lista de proyectos para "Banco de proyectos" (solo con la carrera)
   const projectsBank = [
     { name: 'Proyecto de Energía Solar', company: 'SolarTech', description: 'Desarrollo de una planta de energía solar.', image: '/placeholder.svg?height=200&width=300', career: 'Ingeniería en Energías Renovables' },
     { name: 'Plataforma de E-commerce', company: 'ShopMasters', description: 'Plataforma para ventas en línea para empresas pequeñas.', image: '/placeholder.svg?height=200&width=300', career: 'Ingeniería en Sistemas' },
-    { name: 'Red Social para Empresas', company: 'SocialConnect', description: 'Red social para comunicación empresarial.', image: '/placeholder.svg?height=200&width=300', career: 'Ingeniería en Tecnologías de la Información' },
-    { name: 'Sistema de Inventarios', company: 'InventoryCo', description: 'Sistema para gestión de inventarios en tiempo real.', image: '/placeholder.svg?height=200&width=300', career: 'Ingeniería Industrial' },
+    // Más proyectos aquí...
   ];
 
   return (
@@ -143,21 +165,41 @@ export default function Dashboard() {
                     <h3 className="text-lg font-semibold text-[rgb(31,65,155)] mt-4">{project.name}</h3>
                     <p className="text-sm text-gray-600">{project.company}</p>
                     <p className="text-xs text-gray-500 mt-2">{project.description}</p>
-                    <p className="text-sm text-gray-700 mt-2">{project.student} - {project.career}</p> {/* Aquí agregamos el alumno y la carrera */}
+                    <p className="text-sm text-gray-700 mt-2">{project.student} - {project.career}</p>
+
+                    {/* Etapas del proyecto */}
+                    <div className="flex flex-row items-center space-x-6 mb-4">
+                      {project.stages.map((stage, index) => (
+                        <React.Fragment key={index}>
+                          <div className="flex flex-col items-center">
+                            <span className="text-xs text-gray-600">{`Etapa ${index + 1}`}</span>
+                            <div
+                              className={`flex items-center justify-center w-10 h-10 rounded-full border mt-2 ${stage.completed ? 'bg-[rgb(31,65,155)] border-[rgb(31,65,155)]' : 'bg-gray-200 border-gray-200'}`}
+                            >
+                              {stage.completed ? (
+                                <CheckCircle className="w-5 h-5 text-white" />
+                              ) : (
+                                <Circle className="w-5 h-5 text-gray-500" />
+                              )}
+                            </div>
+                          </div>
+                        </React.Fragment>
+                      ))}
+                    </div>
 
                     <Button variant="outline" className="mt-4 rounded-md bg-blue-500 text-white hover:bg-blue-600">
                       Ver archivos
                     </Button>
 
-                    <div className="mt-4 flex space-x-4">
-                      <Button variant="outline" className="bg-green-500 text-white hover:bg-green-600 rounded-md">Aceptar</Button>
-                      <Button variant="outline" className="bg-red-500 text-white hover:bg-red-600 rounded-md">Rechazar</Button>
-                      <Button variant="outline" className="bg-yellow-500 text-white hover:bg-yellow-600 rounded-md">Contactar</Button>
+                    <div className="mt-4">
+                      <Button variant="outline" className="w-full rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200">
+                        Ver más detalles
+                      </Button>
                     </div>
                   </div>
                 ))}
               </div>
-            ) : (
+            ) : view === 'projectsBank' ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {projectsBank.map((project, index) => (
                   <div key={index} className="bg-white p-4 rounded-xl shadow-md">
@@ -169,15 +211,17 @@ export default function Dashboard() {
                     <h3 className="text-lg font-semibold text-[rgb(31,65,155)] mt-4">{project.name}</h3>
                     <p className="text-sm text-gray-600">{project.company}</p>
                     <p className="text-xs text-gray-500 mt-2">{project.description}</p>
-                    <p className="text-sm text-gray-700 mt-2">{project.career}</p> {/* Solo mostramos la carrera */}
+                    <p className="text-sm text-gray-700 mt-2">{project.career}</p>
 
-                    <Button variant="outline" className="mt-4 rounded-md bg-blue-500 text-white hover:bg-blue-600">
-                      Ver archivos
-                    </Button>
+                    <div className="mt-4">
+                      <Button variant="outline" className="w-full rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200">
+                        Ver más detalles
+                      </Button>
+                    </div>
                   </div>
                 ))}
               </div>
-            )}
+            ) : null}
           </div>
         </div>
       </div>
