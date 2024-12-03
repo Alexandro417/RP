@@ -15,3 +15,23 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+/* Asegura que el body ocupe toda la pantalla */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Asegura que el contenedor principal ocupe toda la pantalla */
+#root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Estilos globales que podrían ser necesarios */
+body {
+  font-family: 'Arial', sans-serif;
+}
