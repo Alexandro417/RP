@@ -7,23 +7,26 @@ import * as bcrypt from 'bcryptjs';
 @Injectable()
 export class AuthService {
   constructor(
-    private  readonly usersService: UsersService, // Servicio para manejar usuarios
+    private readonly usersService: UsersService, // Servicio para manejar usuarios
     private readonly jwtService: JwtService,
   ) {}
 
+  // Método para validar al usuario con username y contraseña
   async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.usersService.findOne(username);
-    if (user && bcrypt.compareSync(pass, user.password)) {
-      const { password, ...result } = user;
-      return result; // Devuelve los datos del usuario sin la contraseña
+    const user = await this.usersService.findOne(username); // Buscar el usuario en la base de datos
+    if (user && await bcrypt.compare(pass, user.password)) { // Asegúrate de usar await en bcrypt.compare
+      const { password, ...result } = user; // Excluir la contraseña de la respuesta
+      return result;
     }
-    return null;
+    return null; // Si no se encuentra el usuario o las credenciales no coinciden, retorna null
   }
 
+  // Método para realizar el login
   async login(user: any) {
-    const payload: JwtPayload = { username: user.username, sub: user.userId }; // JWT payload
+    const payload: JwtPayload = { username: user.username, sub: user.userId }; // Define el payload para JWT
     return {
-      access_token: this.jwtService.sign(payload), // Generar JWT
+      access_token: this.jwtService.sign(payload), // Genera y retorna el JWT
     };
   }
 }
+

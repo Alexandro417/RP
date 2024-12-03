@@ -12,18 +12,24 @@ export class UsersService {
     const hashedPassword = await bcrypt.hash(password, 10);
     return this.prisma.user.create({
       data: {
-        username,
+        username: username,
         password: hashedPassword,
-        fullName,
-        email,
+        fullName: fullName,
+        email:email,
       },
     });
   }
 
   // Obtener un usuario por su nombre de usuario
-  async findOne(username: string): Promise<User | null> {
+  async findOne(email: string): Promise<User | null> {
+    if (!email) {
+      console.error('Username is undefined or null');
+      throw new Error('Username is required');
+    }
+  
+    console.log('Searching for user with username:',email); // Agregar log para verificar
     return this.prisma.user.findUnique({
-      where: { username },
+      where: { email },
     });
   }
 
