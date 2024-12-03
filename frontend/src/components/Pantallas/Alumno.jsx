@@ -31,9 +31,9 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
-      {/* Header */}
-      <header className="bg-[rgb(31,65,155)] text-white p-4 shadow-xl border-b-2 border-[rgb(31,65,155)] fixed top-0 left-0 right-0 z-50 md:relative md:w-full">
-        <div className="flex items-center justify-between md:justify-start">
+      {/* Header fijo */}
+      <header className="bg-[rgb(31,65,155)] text-white p-4 shadow-xl border-b-2 border-[rgb(31,65,155)] fixed top-0 left-0 right-0 z-50">
+        <div className="flex items-center justify-between">
           <div className="flex items-center">
             <div className="w-12 h-12 bg-white rounded-full mr-4 overflow-hidden">
               <img src="/image/img.jpg" alt="Logo IT Matehuala" className="w-full h-full object-cover" />
@@ -74,7 +74,7 @@ export default function Dashboard() {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 p-8 md:ml-64">
+        <div className="flex-1 p-8 md:ml-64 mt-16 overflow-y-auto"> {/* El contenedor tiene overflow-y-auto y margen superior mt-16 */}
           <div className="bg-white rounded-xl shadow-2xl p-6 border border-gray-300">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-semibold text-[rgb(31,65,155)]">{view === 'profile' ? 'Perfil' : view === 'myProject' ? 'Mi Proyecto' : 'Banco de Proyectos'}</h2>
