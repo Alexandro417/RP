@@ -26,8 +26,7 @@ export class UsersService {
       console.error('Username is undefined or null');
       throw new Error('Username is required');
     }
-  
-    console.log('Searching for user with username:',email); // Agregar log para verificar
+    console.log('Searching for user with email:',email); // Agregar log para verificar
     return this.prisma.user.findUnique({
       where: { email },
     });

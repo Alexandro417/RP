@@ -1,23 +1,18 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { AuthController } from './auth.controller';
-import { UsersModule } from '../users/users.module'; // Módulo de usuarios
-import { JwtModule, JwtService } from '@nestjs/jwt';
-import { PassportModule } from '@nestjs/passport';
-import { JwtStrategy } from './jwt.strategy'; // Definir esta estrategia
-import { LocalStrategy } from './local.strategy'; // Definir esta estrategia
-import { jwtConstants } from './jwt.constants';
+
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule } from '@nestjs/config'; // Asegúrate de importar el ConfigModule
+import { JwtStrategy } from './jwt.strategy'; // La estrategia JWT
 
 @Module({
   imports: [
-    UsersModule,  // Asegúrate de tener un módulo de usuarios
-    PassportModule,
+    ConfigModule.forRoot(), // Asegúrate de cargar las variables de entorno
     JwtModule.register({
-      secret: jwtConstants.secret, // Cambiar por una clave más segura
-      signOptions: { expiresIn: '60s' },
+      secret: process.env.JWT_SECRET, // Usa la variable de entorno
+      signOptions: { expiresIn: '60m' }, // Configura el tiempo de expiración si es necesario
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy,JwtService],
-  controllers: [AuthController],
+  providers: [JwtStrategy],
 })
 export class AuthModule {}
+
