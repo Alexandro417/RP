@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Put, Delete, Body, UseGuards } from '@nestjs/common';
 import { AdminService } from './admin.service';
-import { User, Project } from '@prisma/client';
+import { User, Project, Role } from '@prisma/client';
 import { RolesGuard } from '../roles/roles.guard'; // Importar el guard de roles
 
 @Controller('admin')
@@ -16,7 +16,7 @@ export class AdminController {
 
   // Actualizar el rol de un usuario
   @Put('users/:id/role')
-  async updateUserRole(@Param('id') id: string, @Body('role') role: string): Promise<User> {
+  async updateUserRole(@Param('id') id: string, @Body('role') role: Role): Promise<User> {
     return this.adminService.updateUserRole(id, role);
   }
 

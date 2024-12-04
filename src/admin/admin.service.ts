@@ -1,6 +1,6 @@
 import { Injectable, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { User, Project } from '@prisma/client';
+import { User, Project, Role } from '@prisma/client';
 
 @Injectable()
 export class AdminService {
@@ -12,8 +12,8 @@ export class AdminService {
   }
 
   // Actualizar el rol de un usuario
-  async updateUserRole(userId: string, role: string): Promise<User> {
-    if (role !== 'admin' && role !== 'user') {
+  async updateUserRole(userId: string, role: Role): Promise<User> {
+    if (!Object.values(Role).includes(role)) {
       throw new ForbiddenException('Invalid role');
     }
 

@@ -26,7 +26,7 @@ model User {
   password String
   email    String    @unique
   fullName String
-  role     String    @default("ALUMNO") // user, admin, asesor
+  role     Role   @default(ALUMNO) // user, admin, asesor
   projects Project[]
 
   // Relación con AsignacionAsesor (asesor y usuario)
