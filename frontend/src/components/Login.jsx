@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
@@ -16,24 +16,65 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false); // Estado de carga
   const navigate = useNavigate(); // Para redireccionar después del login
+
+  // Verificación de sesión previa
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/alumno"); // Redirige automáticamente si ya está autenticado
+    }
+  }, [navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    console.log("Email:", email);
+    console.log("Password:", password);
+    
+    // Validaciones antes de hacer la solicitud
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      setErrorMessage("Por favor ingresa un correo válido");
+      return;
+    }
+
+    if (password.length < 6) {
+      setErrorMessage("La contraseña debe tener al menos 6 caracteres");
+      return;
+    }
+
+    setIsLoading(true); // Activa el estado de carga
+
     try {
       const response = await axios.post("http://localhost:3000/auth/login", {
         email,
         password,
       });
-
-      // Si el inicio de sesión es exitoso, puedes redirigir al usuario
+      console.log(response); // Muestra la respuesta completa para asegurarte de que el token está presente
+      console.log('Respuesta completa del servidor:', response);
+      // Si el inicio de sesión es exitoso, guarda el token y redirige
       if (response.status === 200) {
-        // Puedes guardar el token o la información que recibas en el localStorage o context
+        console.log("Token recibido:", response.data.access_token);
         localStorage.setItem("token", response.data.access_token);
-        navigate("/dashboard"); // Redirige a otra página, por ejemplo, el dashboard
+        navigate("/alumno"); // Redirige a la página de alumno
+      } else {
+        setErrorMessage("Error al iniciar sesión.token no recibido.");
       }
     } catch (error) {
-      setErrorMessage("Correo o contraseña incorrectos");
+      console.error("Error durante el inicio de sesión:", error.response || error.message);
+
+      if (error.response) {
+        if (error.response.status === 401) {
+          setErrorMessage("Correo o contraseña incorrectos");
+        } else {
+          setErrorMessage(error.response.data.message || "Ocurrió un error en el servidor. Inténtalo de nuevo más tarde.");
+        }
+      } else {
+        setErrorMessage("Ocurrió un error en el servidor. Inténtalo de nuevo más tarde.");
+      }
+    } finally {
+      setIsLoading(false); // Desactiva el estado de carga
     }
   };
 
@@ -111,8 +152,9 @@ export default function Login() {
             <Button
               type="submit"
               className="w-full py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700"
+              disabled={isLoading} // Deshabilita el botón mientras está cargando
             >
-              Iniciar sesión
+              {isLoading ? "Cargando..." : "Iniciar sesión"} {/* Muestra mensaje de carga */}
             </Button>
             {errorMessage && (
               <p className="text-red-500 text-center mt-2">{errorMessage}</p>

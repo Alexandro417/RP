@@ -1,19 +1,19 @@
-import { Strategy } from 'passport-jwt';
-import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { ExtractJwt } from 'passport-jwt';
+import { PassportStrategy } from '@nestjs/passport';
+import { Strategy, ExtractJwt } from 'passport-jwt';
+import { ConfigService } from '@nestjs/config';
+import { JwtPayload } from './interfaces/jwt-playload.interface'; // Asegúrate de tener esta interfaz definida
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(private jwtService: JwtService) {
+  constructor(private configService: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: 'your-secret-key', // Debe coincidir con el secreto utilizado para firmar los tokens
+      secretOrKey: configService.get<string>('JWT_SECRET'),
     });
   }
 
-  async validate(payload: any) {
-    return { userId: payload.sub, username: payload.username }; // Datos del usuario a partir del payload del JWT
+  async validate(payload: JwtPayload) {
+    return { userId: payload.sub, email: payload.email }; // Devuelve el usuario de la carga útil
   }
 }

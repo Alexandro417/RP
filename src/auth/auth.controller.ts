@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, HttpException, HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginAuthDto } from './dto/login-auth.dto';
 
@@ -6,12 +6,16 @@ import { LoginAuthDto } from './dto/login-auth.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('login') // Definimos la ruta POST para login
-  async login(@Body() loginDto: LoginAuthDto) {
-    const user = await this.authService.validateUser(loginDto.email, loginDto.password); // Validamos el usuario
-    if (!user) {
-      throw new Error('Invalid credentials'); // Si no se encuentra al usuario o las credenciales son incorrectas
-    }
-    return this.authService.login(user); // Retornamos el JWT si la validación es exitosa
+  @Post('login')
+async login(@Body() loginDto: LoginAuthDto) {
+  console.log('Login attempt:', loginDto); // Verifica que los datos estén llegando correctamente
+  const user = await this.authService.validateUser(loginDto.email, loginDto.password);
+  if (!user) {
+    throw new Error('Invalid credentials');
   }
+  const response = await this.authService.login(user);
+  console.log('Login successful, token:', response); // Verifica que el token se genere correctamente
+  return response;
+}
+
 }

@@ -6,6 +6,7 @@ import Inicio from './components/Inicio.jsx';
 import Ayuda from './components/Ayuda';
 import Registro from './components/Registro.jsx';
 import DivisionEstudios from './components/Pantallas/Divicion.jsx';
+
 function App() {
   return (
     <div className="App">
