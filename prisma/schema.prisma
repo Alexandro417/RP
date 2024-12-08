@@ -20,23 +20,34 @@ enum Role {
   ADMIN
   SUPERADMIN
 }
+enum ProjectStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
 model User {
-  id       String    @id @default(auto()) @map("_id") @db.ObjectId
-  username String    @unique
-  password String
-  email    String    @unique
-  fullName String
-  role     Role   @default(ALUMNO) // user, admin, asesor
-  projects Project[]
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  username   String    @unique
+  password   String
+  email      String    @unique
+  fullName   String
+  phone      String?   // Campo opcional para el número de teléfono
+  carrera    String?    // Campo para almacenar la carrera del usuario
+  role       Role      @default(ALUMNO) // user, admin, asesor
+  projects   Project[]
 
   // Relación con AsignacionAsesor (asesor y usuario)
   asesorAsig  AsignacionAsesor[] @relation("Asesor")
   usuarioAsig AsignacionAsesor[] @relation("Usuario")
+
   // Relación con Evaluacion (asesor)
   evaluacionesEvaluadas Evaluacion[]
+
   // Relación con Reportes
   reportesGenerados Report[]
 }
+
 
 model Project {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
@@ -91,6 +102,8 @@ model Evaluacion {
   calificacion Int // Calificación otorgada al proyecto
   comentarios  String? // Comentarios del asesor
 }
+
+
 
 ///schema nuevos de acuerdo a el script de sql server 
 // Schema for [Person].[Career]
