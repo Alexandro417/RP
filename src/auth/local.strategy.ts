@@ -1,19 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy } from 'passport-local';
-import { AuthService } from './auth.service';
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { ConfigService } from '@nestjs/config'; // Asegúrate de usar el ConfigService
 
 @Injectable()
-export class LocalStrategy extends PassportStrategy(Strategy) {
-  constructor(private authService: AuthService) {
-    super({ usernameField: 'email' }); // Usamos el email como 'usernameField'
+export class JwtStrategy extends PassportStrategy(Strategy) {
+  constructor(private configService: ConfigService) {
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      secretOrKey: configService.get('JWT_SECRET'), // Obtiene la clave secreta desde las variables de entorno
+    });
   }
 
-  async validate(email: string, password: string): Promise<any> {
-    const user = await this.authService.validateUser(email, password);
-    if (!user) {
-      throw new Error('Invalid credentials');
-    }
-    return user;
+  async validate(payload: any) {
+    return { userId: payload.sub, username: payload.username };
   }
 }

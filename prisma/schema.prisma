@@ -10,6 +10,7 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
+
 // Define the roles as an enum
 enum Role {
   ALUMNO
