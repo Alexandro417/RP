@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { GtuvController } from './gtuv.controller';
-import { GtuvService } from './gtuv.service';
+import { GTUVController } from './gtuv.controller';
+import { GTUVService } from './gtuv.service';
 
 @Module({
-  controllers: [GtuvController],
-  providers: [GtuvService]
+  controllers: [GTUVController],
+  providers: [GTUVService]
 })
 export class GtuvModule {}

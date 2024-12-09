@@ -6,6 +6,6 @@ export class FilesService {
   constructor(private readonly googleCloudStorageService: GoogleCloudStorageService) {}
 
   async uploadFile(file: Express.Multer.File) {
-    return this.googleCloudStorageService.uploadFile(file); // Delegamos la carga al servicio de Google Cloud Storage
+    return this.googleCloudStorageService.uploadFile(file, 'files'); // Delegamos la carga al servicio de Google Cloud Storage
   }
 }

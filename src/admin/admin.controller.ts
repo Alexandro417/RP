@@ -13,7 +13,10 @@ export class AdminController {
   async getAllUsers(): Promise<User[]> {
     return this.adminService.findAllUsers();
   }
-
+  @Get('profile')
+  getProfile() {
+    return { message: 'Esto es un perfil protegido' };
+  }
   // Actualizar el rol de un usuario
   @Put('users/:id/role')
   async updateUserRole(@Param('id') id: string, @Body('role') role: Role): Promise<User> {
