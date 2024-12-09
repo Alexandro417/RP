@@ -17,14 +17,14 @@ function App() {
       <Routes>
         {/* Ruta para inicio */}
         <Route path="/" element={<Inicio />} />
-        {/* Ruta para Alumno */}
-        <Route path="/alumno" element={<Alumno />} />
         {/* Ruta para Login */}
         <Route path="/login" element={<Login />} />
         {/* Ruta para Ayuda */}
         <Route path="/ayuda" element={<Ayuda />} />
         {/* Ruta para Registro */}
         <Route path="/registro" element={<Registro />} />
+         {/* Ruta para Alumno */}
+         <Route path="/alumno" element={<Alumno />} />
         {/* Ruta para Division */}
         <Route path="/division" element={<DivisionEstudios />} />
         {/* Ruta para Asesor */}
