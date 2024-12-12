@@ -55,7 +55,7 @@ export default function Login() {
       console.log(response); // Muestra la respuesta completa para asegurarte de que el token está presente
       console.log('Respuesta completa del servidor:', response);
       // Si el inicio de sesión es exitoso, guarda el token y redirige
-      if (response.status === 200) {
+      if (response.status === 201) {
         console.log("Token recibido:", response.data.access_token);
         localStorage.setItem("token", response.data.access_token);
         navigate("/alumno"); // Redirige a la página de alumno

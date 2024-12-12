@@ -1,11 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { User, FolderKanban, Upload, Download, ChevronDown, CheckCircle, Circle, Camera, Menu, X } from 'lucide-react';
 import { Button } from "../ui/Button";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "../ui/dropdown-menu";
+import { DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "../ui/dropdown-menu";
+import { useNavigate } from 'react-router-dom'; // Cambiado useHistory por useNavigate
 
 export default function Dashboard() {
-  const [view, setView] = useState('myProject'); // Estado para controlar la vista actual (Mi Proyecto, Banco de Proyectos o Perfil)
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // Estado para el menú móvil
+  const VIEWS = {
+    PROFILE: 'profile',
+    MY_PROJECT: 'myProject',
+    BANK_PROJECTS: 'bankProjects',
+  };
+  const [view, setView] = useState(VIEWS.MY_PROJECT);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [profile, setProfile] = useState(null); // Para almacenar el perfil
+  const [isLoading, setIsLoading] = useState(false); // Estado de carga
+  const [error, setError] = useState(null); // Estado de error
+  const navigate = useNavigate(); // Cambiado useHistory por useNavigate
 
   const projectStages = [
     { name: 'Propuesta', completed: true },
@@ -22,12 +32,42 @@ export default function Dashboard() {
     { name: 'E-commerce', company: 'ShopMasters', description: 'Plataforma de compras online para pequeñas empresas.', image: '/placeholder.svg?height=200&width=300' },
   ];
 
-  const projectDetails = {
-    name: 'Sistema de Gestión',
-    company: 'TechSolutions',
-    description: 'Optimiza el control de stock y mejora la eficiencia operativa.',
-    image: '/placeholder.svg?height=200&width=300'
+  // Función para obtener el perfil
+  const getProfile = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch('/api/profile', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setProfile(data);
+      } else {
+        setError('No se pudo cargar el perfil. Inténtalo más tarde.');
+      }
+    } catch (error) {
+      setError('Ocurrió un error al cargar el perfil.');
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  // Función para cerrar sesión
+  const logout = () => {
+    localStorage.removeItem('token'); // Eliminar el token de localStorage
+    navigate('/login'); // Redirigir a la página de login
+  };
+
+  // Obtener el perfil cuando la vista sea 'profile'
+  useEffect(() => {
+    if (view === VIEWS.PROFILE) {
+      getProfile();
+    }
+  }, [view]);
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
@@ -66,38 +106,18 @@ export default function Dashboard() {
             </a>
 
             {/* Menú Cerrar sesión */}
-            <a href="#" className="flex items-center space-x-3 px-2 py-2 rounded hover:bg-white/10">
+            <a href="#" className="flex items-center space-x-3 px-2 py-2 rounded hover:bg-white/10" onClick={logout}>
               <Upload className="w-5 h-5" />
-              <span>Cerrar Seción</span>
+              <span>Cerrar Sesión</span>
             </a>
           </nav>
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 p-8 md:ml-64 mt-16 overflow-y-auto"> {/* El contenedor tiene overflow-y-auto y margen superior mt-16 */}
+        <div className="flex-1 p-8 md:ml-64 mt-16 overflow-y-auto">
           <div className="bg-white rounded-xl shadow-2xl p-6 border border-gray-300">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-semibold text-[rgb(31,65,155)]">{view === 'profile' ? 'Perfil' : view === 'myProject' ? 'Mi Proyecto' : 'Banco de Proyectos'}</h2>
-              <div className="flex space-x-4">
-                {view !== 'profile' && (
-                  <>
-                    <Button variant="outline" className="rounded-md text-[rgb(31,65,155)] border-gray-300 hover:border-[rgb(31,65,155)]">
-                      <Download className="mr-2 h-4 w-4" /> Descargar formatos
-                    </Button>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="rounded-md text-[rgb(31,65,155)] border-gray-300 hover:border-[rgb(31,65,155)]">
-                          Ir a <ChevronDown className="ml-2 h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        <DropdownMenuItem onClick={() => setView('myProject')}>Mi proyecto</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => setView('projectsBank')}>Banco de proyectos</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </>
-                )}
-              </div>
             </div>
 
             {/* Mostrar contenido basado en la vista seleccionada */}
@@ -105,10 +125,10 @@ export default function Dashboard() {
               <div className="flex flex-col items-center text-center">
                 {/* Imagen de perfil y botón para cambiar */}
                 <div className="relative mb-4">
-                  <img 
-                    src="/image/perfil.png"  // Imagen de perfil actualizada
-                    alt="Imagen de perfil" 
-                    className="w-32 h-32 rounded-full object-cover" 
+                  <img
+                    src={profile?.image || '/image/perfil.png'}
+                    alt="Imagen de perfil"
+                    className="w-32 h-32 rounded-full object-cover"
                   />
                   <Button className="absolute bottom-0 right-0 bg-[rgb(31,65,155)] text-white p-2 rounded-full">
                     <Camera className="w-5 h-5" />
@@ -116,7 +136,7 @@ export default function Dashboard() {
                 </div>
 
                 {/* Información de perfil */}
-                <p className="text-lg text-gray-800 font-semibold mb-2">Ingeniería en Sistemas</p>
+                <p className="text-lg text-gray-800 font-semibold mb-2">{profile?.name || 'Ingeniería en Sistemas'}</p>
 
                 {/* Formulario de perfil */}
                 <div className="w-full max-w-sm">
@@ -125,7 +145,8 @@ export default function Dashboard() {
                     <input
                       type="text"
                       className="w-full border-b-2 border-gray-300 focus:border-[rgb(31,65,155)] outline-none text-gray-800"
-                      placeholder="123-456-7890"
+                      value={profile?.phone || '123-456-7890'}
+                      readOnly
                     />
                   </div>
                   <div className="mb-4">
@@ -133,16 +154,8 @@ export default function Dashboard() {
                     <input
                       type="email"
                       className="w-full border-b-2 border-gray-300 focus:border-[rgb(31,65,155)] outline-none text-gray-800"
-                      value="L20660042@matehuala.tecnm.mx"
+                      value={profile?.email || 'L20660042@matehuala.tecnm.mx'}
                       readOnly
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <p className="text-sm text-gray-400 uppercase">Cambiar contraseña</p>
-                    <input
-                      type="password"
-                      className="w-full border-b-2 border-gray-300 focus:border-[rgb(31,65,155)] outline-none text-gray-800"
-                      placeholder="Nueva contraseña"
                     />
                   </div>
 
@@ -154,59 +167,23 @@ export default function Dashboard() {
                   </div>
                 </div>
               </div>
-            ) : view === 'myProject' ? (
-              <div className="bg-gray-50 rounded-lg p-6 mb-6 shadow-sm border border-gray-200 w-full max-w-4xl mx-auto flex flex-col items-center justify-between">
-                <div className="w-full h-40">
-                  <img 
-                    src={projectDetails.image}
-                    alt="Vista previa del proyecto"
-                    className="w-full h-full object-cover rounded-lg"
-                  />
-                </div>
-                <div className="flex flex-col items-center text-center mb-6">
-                  <h3 className="text-lg font-semibold text-[rgb(31,65,155)] mb-1">{projectDetails.name}</h3>
-                  <p className="text-gray-600 text-sm mb-1">Empresa: {projectDetails.company}</p>
-                  <p className="text-gray-700 text-xs">{projectDetails.description}</p>
-                </div>
-
-                {/* Etapas */}
-                <div className="flex flex-row items-center space-x-6 mb-4">
-                  {projectStages.map((stage, index) => (
-                    <React.Fragment key={index}>
-                      <div className="flex flex-col items-center">
-                        <span className="text-xs text-gray-600">{`Etapa ${index + 1}`}</span>
-                        <div
-                          className={`flex items-center justify-center w-10 h-10 rounded-full border mt-2 ${stage.completed ? 'bg-[rgb(31,65,155)] border-[rgb(31,65,155)]' : 'bg-gray-200 border-gray-200'}`}
-                        >
-                          {stage.completed ? (
-                            <CheckCircle className="w-5 h-5 text-white" />
-                          ) : (
-                            <Circle className="w-5 h-5 text-gray-500" />
-                          )}
-                        </div>
-                      </div>
-                    </React.Fragment>
-                  ))}
-                </div>
-
-                <div className="flex space-x-4 mt-4">
-                  <Button variant="outline" className="rounded-md">Ver archivos</Button>
-                  <Button variant="outline" className="rounded-md">Subir archivos</Button>
-                </div>
-              </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {projects.map((project, index) => (
                   <div key={index} className="bg-white p-4 rounded-lg shadow-md">
-                    <img 
-                      src={project.image} 
-                      alt="Imagen de proyecto" 
+                    <img
+                      src={project.image}
+                      alt="Imagen de proyecto"
                       className="w-full h-40 object-cover rounded-md"
                     />
-                    <h3 className="text-lg font-semibold text-[rgb(31,65,155)] mt-4">{project.name}</h3>
-                    <p className="text-sm text-gray-600">{project.company}</p>
-                    <p className="text-xs text-gray-500 mt-2">{project.description}</p>
-                    <Button variant="outline" className="mt-4 rounded-md">Ver archivos</Button>
+                    <div className="mt-4">
+                      <h3 className="text-lg font-semibold text-[rgb(31,65,155)]">{project.name}</h3>
+                      <p className="text-gray-500">{project.company}</p>
+                      <p className="text-gray-700 mt-2">{project.description}</p>
+                    </div>
+                    <button className="bg-[rgb(31,65,155)] text-white mt-4 w-full py-2 rounded-lg hover:bg-blue-600">
+                      Seleccionar Proyecto
+                    </button>
                   </div>
                 ))}
               </div>
