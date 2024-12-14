@@ -5,6 +5,9 @@ import * as path from 'path';
 
 @Injectable()
 export class GoogleCloudStorageService {
+  getFile(_fileId: string) {
+      throw new Error('Method not implemented.');
+  }
   private storage: Storage;
   private bucketName = 'residencias-bucket-uploads'; // Coloca aquí el nombre de tu bucket de Google Cloud Storage
 
@@ -15,7 +18,7 @@ export class GoogleCloudStorageService {
     });
   }
 
-  async uploadFile(file: Express.Multer.File): Promise<string> {
+  async uploadFile(file: Express.Multer.File, p0: string): Promise<string> {
     const bucket = this.storage.bucket(this.bucketName);
     const blob = bucket.file(`${uuidv4()}-${file.originalname}`);
     

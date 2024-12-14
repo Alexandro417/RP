@@ -10,6 +10,7 @@ import JefeCarreraDashboard from './components/Pantallas/JefeCarrera.jsx'; // As
 import DivisionEstudios from './components/Pantallas/Divicion.jsx';
 import DocenteDashboard from './components/Pantallas/Docente.jsx';
 import GTIVDashboard from './components/Pantallas/GTIV.jsx'; // Asegúrate de importar el componente GTIV
+import Profile from './components/Profile'; // Asegúrate de importar correctamente
 
 function App() {
   return (
@@ -17,14 +18,14 @@ function App() {
       <Routes>
         {/* Ruta para inicio */}
         <Route path="/" element={<Inicio />} />
-        {/* Ruta para Alumno */}
-        <Route path="/alumno" element={<Alumno />} />
         {/* Ruta para Login */}
         <Route path="/login" element={<Login />} />
         {/* Ruta para Ayuda */}
         <Route path="/ayuda" element={<Ayuda />} />
         {/* Ruta para Registro */}
         <Route path="/registro" element={<Registro />} />
+         {/* Ruta para Alumno */}
+         <Route path="/alumno" element={<Alumno />} />
         {/* Ruta para Division */}
         <Route path="/division" element={<DivisionEstudios />} />
         {/* Ruta para Asesor */}
@@ -35,9 +36,12 @@ function App() {
         <Route path="/docente" element={<DocenteDashboard />} />
         {/* Ruta para GTIV */}
         <Route path="/gtiv" element={<GTIVDashboard />} />
+        {/* Ruta para Profile */}
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </div>
   );
 }
 
 export default App;
+
